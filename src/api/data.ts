@@ -1,4 +1,4 @@
-import { AccountInfo } from '../types/DataTypes';
+import { AccountInfo, Playlists } from '../types/DataTypes';
 import env from '../util/env';
 
 export const getUserData = async (id: string): Promise<AccountInfo> => {
@@ -17,7 +17,7 @@ export const getUserData = async (id: string): Promise<AccountInfo> => {
 	});
 };
 
-export const getPlaylistsData = async (id: string) => {
+export const getPlaylistsData = async (id: string): Promise<Playlists> => {
 	return new Promise((resolve) => {
 		fetch(env.API_ENDPOINT + '/data/playlists', {
 			method: 'POST',
@@ -27,8 +27,8 @@ export const getPlaylistsData = async (id: string) => {
 			body: JSON.stringify({ id: id })
 		})
 			.then((res) => res.json())
-			.then((playlists) => {
-				resolve(playlists)
+			.then((playlists: Playlists) => {
+				resolve(playlists);
 			})
 	})
 }

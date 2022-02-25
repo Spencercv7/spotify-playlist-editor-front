@@ -1,73 +1,42 @@
 <script lang="ts">
-	import { getPlaylistsData, getUserData } from '../api/data';
-	import env from '../util/env';
-
+	// UTIL
 	import { onMount } from 'svelte';
-	import { AccountInfo } from '../types/DataTypes';
+	
+	// TYPES
+	import { Playlist } from '../types/DataTypes';
+	
+	// API
+	import { getPlaylistsData } from '../api/data';
+	
+	// COMPONENTS
+	import Dev from '../components/Dev.svelte';
 
-	const spotifyLoginEndpoint: string = env.API_ENDPOINT + '/auth/login';
+	let playlists: Playlist[];
 
-	onMount(async () => {
+	onMount(() => {
 		const id: string = localStorage.getItem('USER_ID');
 
 		if (id) {
-			getUserData(id).then((res) => {
-				console.log(res);
+			getPlaylistsData(id).then((res) => {
+				playlists = res.lists;
 			});
 		}
 	});
 
-	const getUser = () => {
-		const id: string = localStorage.getItem('USER_ID');
-
-		if (id) {
-			getUserData(id).then((account: AccountInfo) => {
-				console.log(account);
-			});
-		} else {
-			alert('Please login.');
-		}
-	};
-
-	const getPlaylists = () => {
-		const id: string = localStorage.getItem('USER_ID');
-
-		if (id) {
-			getPlaylistsData(id).then((playlists) => {
-				console.log(playlists);
-			});
-		} else {
-			alert('Please login.')
-		}
-	};
 </script>
 
-<div id="page_wrapper">
-	<h1>Endpoint Testing</h1>
-	<div id="button_wrapper">
-		<a href={spotifyLoginEndpoint}>Login</a>
-		<button on:click={() => getUser()}>Get Account Data</button>
-		<button on:click={() => getPlaylists()}>Get Playlists Data</button>
-	</div>
-</div>
+<section>
+	<Dev />
+</section>
 
 <style>
-	#page_wrapper {
+
+	section {
 		height: 100%;
 		width: 100%;
+		
 		display: grid;
 		place-items: center;
 	}
 
-	#button_wrapper {
-		display: flex;
-		gap: 3rem;
-	}
-
-	a {
-		position: absolute;
-		top: 0;
-		right: 0;
-		margin: 3rem;
-	}
 </style>
